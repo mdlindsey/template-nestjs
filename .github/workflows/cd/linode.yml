@@ -1,0 +1,17 @@
+name: Deploy to Linode
+on: [push, pull_request]
+  # push:
+  #   branches: [ main ]
+jobs:
+  deploy:
+    name: Deploy application
+    runs-on: ubuntu-latest
+    steps:
+    # - uses: actions/checkout@v2
+    - name: Deploy application to wildlifevolunteers.org
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PWD }}
+        script: 'cd /var/www/web && git pull && yarn install --ignore-engines && yarn build && yarn forever:restart'
